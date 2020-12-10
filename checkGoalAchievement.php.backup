@@ -1,0 +1,86 @@
+<?php
+	$host='localhost';
+	$user='root';
+	$password='Drlf@187!!';
+	$db='TheAgonDB';
+
+	$connection = @mysqli_connect($host,$user,$password,$db);
+	
+	if(!$connection){
+		echo "Error: " .mysqli_connect_error();
+		exit();
+	}
+
+	else{
+		$sql = "DELETE FROM weekly_steps 
+				WHERE week_number=week(curdate());";
+
+		$query = mysqli_query($connection, $sql);
+		
+
+		if (false===$query ) {
+		  printf("error: %s\n", mysqli_error($connection));
+		}
+		else {
+		  echo 'done';
+		
+		}
+
+		$sql = "INSERT INTO weekly_steps (user_id, week_number, week_desc, week_cumulative, goal_achieved)
+SELECT 
+A.user_id,
+A.week_number,
+A.week_desc,
+A.weekly_steps as week_cumulative,
+CASE WHEN A.weekly_steps>=COALESCE(B.weekly_goal,999999) THEN 1 ELSE 0 END 
+goal_achieved
+FROM
+(SELECT 
+user_id,
+week_number,
+week_desc,
+sum(step_count) weekly_steps
+FROM(
+SELECT 
+	t1.user_id,
+	DATE(date_1) as day,
+	t1.server_timestamp,
+	MAX(step_count) step_count
+	FROM `step` t1
+	INNER JOIN (
+		SELECT
+		user_id,
+		CAST(server_timestamp as date) date_1, MAX(server_timestamp) server_timestamp
+		FROM `step`
+		GROUP BY user_id,CAST(server_timestamp as date) ) t2
+	ON t1.user_id=t2.user_id AND t1.server_timestamp=t2.server_timestamp
+	GROUP BY
+	t1.user_id,
+	date_1,
+	t1.server_timestamp
+	ORDER BY `t2`.`date_1` ASC
+          ) A
+    INNER JOIN week_dim B ON A.day=DATE(B.date)
+    group by user_id, 
+    week_number,
+    week_desc
+    ) A
+	LEFT JOIN goal_setting_record B ON  
+    A.user_id=B.user_id AND 
+    A.week_number=B.week_number
+    WHERE  A.week_number=week(curdate())";
+
+		$query = mysqli_query($connection, $sql);
+		
+
+		if (false===$query ) {
+		  printf("error: %s\n", mysqli_error($connection));
+		}
+		else {
+		  echo 'done';
+		
+		}
+	}
+		
+mysqli_close($connection);
+?>
