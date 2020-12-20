@@ -2,9 +2,10 @@
 	include 'db_config.php';
 	$connection = @mysqli_connect($host,$user,$password,$db);
 
-	$userId = $_POST['a'];
-	$eventType = $_POST['b'];
-	$parameter = $_POST['c'];
+	$userId = $_POST['userId'];
+	$eventType = $_POST['eventType'];
+	$parameter = $_POST['parameter'];
+	$timestamp = $_POST['timestamp'];
 	
 	if(!$connection){
 		echo "Error: " .mysqli_connect_error();
@@ -13,7 +14,7 @@
 
 	else{
 
-		$sql = "INSERT INTO `events` (`user_id`, `event_type_id`, `parameter`) VALUES ($userId, $eventType, $parameter)";	
+		$sql = "INSERT INTO `events`(`user_id`, `event_type_id`,`parameter`,`timestamp`) VALUES ($userId,$eventType, $parameter, $timestamp)";
 
 		$query = mysqli_query($connection, $sql);
 
