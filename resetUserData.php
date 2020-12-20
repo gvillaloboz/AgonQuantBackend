@@ -30,7 +30,7 @@
     }
     
     function resetSteps($connection, $userId){
-        echo("resetSteps");
+        
         $delete_step_query = 'delete from step where user_id='.$userId;
         $reseted_steps = mysqli_query($connection, $delete_step_query);
         if($reseted_steps===false){
@@ -38,6 +38,7 @@
             exit;
         }
         else{
+            print("Steps reseted \n");
             header('HTTP/1.1 200 OK');
         }
     }
@@ -51,9 +52,25 @@
             exit;
         }
         else{
+            print("Goal Setting Record reseted \n");
             header('HTTP/1.1 200 OK');
         }
     }
+    
+    function resetDailyGoalRecord($connection, $userId){
+        
+        $delete_daily_goal_record_query = 'delete from daily_goal_record where user_id='.$userId;
+        $reseted_daily_goal_record = mysqli_query($connection, $delete_daily_goal_record_query);
+        if($reseted_daily_goal_record===false){
+            header("HTTP/1.1 500 Server Error");
+            exit;
+        }
+        else{
+            print("Daily Goal Records reseted \n");
+            header('HTTP/1.1 200 OK');
+        }
+    }
+    
     
     function resetWeeklySteps($connection, $userId){
         
@@ -64,6 +81,7 @@
             exit;
         }
         else{
+            printf("Weekly Steps Records reseted \n");
             header('HTTP/1.1 200 OK');
         }
     }
