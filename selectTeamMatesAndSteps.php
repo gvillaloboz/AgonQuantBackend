@@ -69,8 +69,8 @@
 	   	INNER JOIN week w ON server_timestamp >= w.begin_date  AND  server_timestamp <= w.end_date
 	   	WHERE w.week_number = ?
 	   	GROUP BY user_id,
-	   	CAST(server_timestamp AS DATE)
-	) steps_d ON  user.id=steps_d.user_id
+        steps_date) as
+        steps_d ON  user.id=steps_d.user_id
 	WHERE user.team_name = ?
 	GROUP BY user.id, pseudonym, team_name;");                          
 
