@@ -63,7 +63,7 @@
 		user.id,
     		user.pseudonym,
     		user.team_name,
-    		COALESCE(sum(s.steps),0) as steps
+    		COALESCE(sum(steps_d.steps),0) as steps
 	FROM
 		user
 	LEFT JOIN (SELECT
@@ -74,13 +74,14 @@
 		INNER JOIN week w ON server_timestamp >= w.begin_date  AND  server_timestamp <= w.end_date
 		WHERE w.week_number = ?
 		GROUP BY user_id,
-		steps_date) as s ON s.user_id=user.id
+		steps_date) as
+        steps_d ON user.id=steps_d.user_id
 	INNER JOIN team_competition tc ON tc.team_b=user.team_name
-	WHERE tc.team_a=?
+	WHERE tc.team_a=? AND tc.week_number = ?
 	GROUP BY user.id
 	ORDER BY steps DESC");                                
 
-	$statement-> bind_param("is", $weekNumber, $teamName);
+	$statement-> bind_param("isi", $weekNumber, $teamName, $weekNumber);
     	//$statement-> bind_param("isi", $weekNumber, $teamName, $weekNumber);
 
 	$statement->execute(); // Execute the statement.
