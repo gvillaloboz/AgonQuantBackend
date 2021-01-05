@@ -25,7 +25,7 @@
                 exit;	
 	}	
 
-	$sql = 'SELECT * FROM daily_goal_record WHERE user_id='.$userId.' AND week=WEEK(CURDATE())';
+	$sql = 'SELECT * FROM daily_goal_record WHERE user_id='.$userId.'';
 	$q = mysqli_query($connection, $sql);
 	if(mysqli_num_rows($q) > 0) {		
 		$daily_goals = array();
