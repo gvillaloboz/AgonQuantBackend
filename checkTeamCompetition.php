@@ -18,20 +18,20 @@
 
 		
 		$get_week_competitions = "
-			select * from team_competition where week_number=(week(curdate()))
+			select * from team_competition where week_number=WEEK(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
 		";
 
 		$query_competitions = mysqli_query($connection, $get_week_competitions);
 		
 		function getTeamWeekScore($connection, $team_name) {
 		$get_week_score = "
-			select
+		select
 				*
 			from(
 				select
 				sum(day_total) team_week_total,
 				user.team_name,
-				(select week_number from week where date(week.begin_date) <= ts and date(week.end_date) >= ts) week_number
+				week_number
 				from (
 					select 
 						max(step_count) as day_total,
@@ -40,11 +40,12 @@
 					from step
 					group by user_id, ts
 				) as steps_per_day
+                inner join week on date(week.begin_date) <= steps_per_day.ts and date(week.end_date) >= steps_per_day.ts 
 				inner join user on user.id=user_id
 				group by week_number, team_name
 			) as teamsteps_per_week
-			where week_number=(week(curdate())) and team_name='".$team_name."'
-		";
+			where week_number= WEEK(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) and team_name='".$team_name."'";
+
 			$teams_week_score = mysqli_query($connection, $get_week_score);
 		#	var_dump($teams_week_score);
 			if(mysqli_num_rows($teams_week_score) > 0) {
@@ -57,7 +58,7 @@
 			return $team_week_score;
 		}
 		function updateCompWinner($connection, $winner, $team_a, $team_b) {
-			$set_competition_winner = "update team_competition set winner='".$winner."' where week_number=(week(curdate())) and team_a='".$team_a."' and team_b='".$team_b."'";
+			$set_competition_winner = "update team_competition set winner='".$winner."' where week_number=WEEK(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) and team_a='".$team_a."' and team_b='".$team_b."'";
 			echo 'winner: '.$winner.' team_a: '.$team_a.' team_b: '.$team_b.' | ';
 			mysqli_query($connection, $set_competition_winner);
 		}

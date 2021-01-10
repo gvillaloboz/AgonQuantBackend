@@ -28,7 +28,7 @@
     	$day_numbering = array("Monday" => 1, "Tuesday" => 2, "Wednesday" => 3, "Thursday" => 4, "Friday" => 5, "Saturday" => 6, "Sunday" => 7);
         $day_of_week = $day_numbering[date('l', strtotime($date))];
 	echo date('l', strtotime($date)).' '.$day_of_week;
-        $req = 'SELECT * FROM daily_goal_record  WHERE user_id='.$user_id.' AND day='.$day_of_week.' AND week=WEEK(CURDATE())';
+        $req = 'SELECT * FROM daily_goal_record  WHERE user_id='.$user_id.' AND day='.$day_of_week.' AND week=WEEK(DATE_SUB(CURDATE(), INTERVAL 1 DAY))';
 	$res = mysqli_query($connection, $req);
         if ($res != false) {
             if (mysqli_num_rows($res) > 0) {

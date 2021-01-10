@@ -9,7 +9,7 @@
 
 	else{
 		$sql = "DELETE FROM weekly_steps 
-				WHERE week_number=week(curdate());";
+				WHERE week_number=week(DATE_SUB(CURDATE(), INTERVAL 1 DAY));";
 
 		$query = mysqli_query($connection, $sql);
 		
@@ -72,7 +72,7 @@
 				week_number,
 				week_desc,
 				sum(step_count) weekly_cumulative,
-				CASE WHEN sum(step_count)>=COALESCE((SELECT weekly_goal FROM goal_setting_record gsr WHERE week_number=week(curdate()) AND A.user_id=gsr.user_id ORDER BY gsr.server_timestamp DESC LIMIT 0,1),999999) THEN 1 ELSE 0 END 
+				CASE WHEN sum(step_count)>=COALESCE((SELECT weekly_goal FROM goal_setting_record gsr WHERE week_number=week(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AND A.user_id=gsr.user_id ORDER BY gsr.server_timestamp DESC LIMIT 0,1),999999) THEN 1 ELSE 0 END 
 				goal_achieved
 			FROM(
 			SELECT 
@@ -85,7 +85,7 @@
 				t1.user_id
 			) A
 			INNER JOIN week_dim B ON A.date_1=DATE(B.date)
-			WHERE week_number=week(curdate())
+			WHERE week_number=week(DATE_SUB(CURDATE(), INTERVAL 1 DAY))
 			GROUP BY user_id, week_desc, week_number
 		";
 		$query = mysqli_query($connection, $sql);
