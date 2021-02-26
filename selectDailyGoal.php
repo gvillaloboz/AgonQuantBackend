@@ -24,8 +24,10 @@
                 header("HTTP/1.1 500 Server Error");
                 exit;	
 	}	
-
-	$sql = 'SELECT * FROM daily_goal_record WHERE user_id='.$userId.'';
+    
+    $sql = 'SELECT max(goal_achieved) as goal_achieved, day, week, user_id FROM daily_goal_record WHERE user_id= '.$userId.' GROUP BY day, week, user_id';
+    
+//	$sql = 'SELECT * FROM daily_goal_record WHERE user_id='.$userId.'';
 	$q = mysqli_query($connection, $sql);
 	if(mysqli_num_rows($q) > 0) {		
 		$daily_goals = array();

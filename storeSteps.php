@@ -13,7 +13,13 @@
 	}else{
 		$sql = "INSERT INTO `step`(`step_count`,`user_id`,`server_timestamp`) VALUES ($stepCount, $userId, $timestamp)";
 		$query = mysqli_query($connection, $sql);
-		echo http_response_code();
+        if ($query===false) {
+            printf("error: %s\n", mysqli_error($connection));
+                    header("HTTP/1.1 500 Server Error");
+                    exit;
+        } else {
+            header('HTTP/1.1 200 OK');
+        }
 	}
 
 mysqli_close($connection);
