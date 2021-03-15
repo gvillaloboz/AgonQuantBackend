@@ -2,8 +2,8 @@
 	$ONESIGNAL_APP_ID = 'b2d54ef5-defc-47b3-a2c9-cd104d2cd11a';
 	$OS_API_URL = 'https://onesignal.com/api/v1/notifications';
 	$OS_REST_API_TOKEN = 'MTU2YmQzMzEtNmM1Mi00YzgzLWJlYzgtNDJkNjQzNDE3Mzkx';
-	$NOTIFICATION_TITLE = "It's a beautiful day";
-	$NOTIFICATION_MESSAGE = "It's a new day, it's a new week, better check the news fast";	
+	$NOTIFICATION_TITLE = "Quel magnifique lundi";
+	$NOTIFICATION_MESSAGE = "Un nouveau jour, une nouvelle semaine, pleins de nouvelles choses vous attendent";	
 
 	$request_payload = array(
 		'included_segments' => array('Subscribed Users'),
